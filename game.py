@@ -623,7 +623,7 @@ class PygView(object):
         try:  # ----------- load sprite images -----------
             tile = pygame.image.load(os.path.join("data", "startile-300px.png"))
             # tile = pygame.transform.scale(tile, (100,100)) # scale tile to (pixel): x=100, y=100
-            PygView.images.append(pygame.image.load(os.path.join("data", "babytux.png")))  # index 0
+            PygView.images.append(pygame.image.load(os.path.join("data", "nadim1.png")))  # index 0
             PygView.images.append(pygame.image.load(os.path.join("data", "babytux_neg.png")))  # index 1
             # PygView.images.append(pygame.image.load(os.path.join("data", "babytux_neg.png")))   # index 2
             
