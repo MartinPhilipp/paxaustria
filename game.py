@@ -604,6 +604,22 @@ class PygView(object):
         """painting on the surface (once) and create sprites"""
         # make an interesting background 
         draw_examples(self.background)  # background artwork
+        self.backgrounds = []
+        self.backgrounds.append(self.background)
+        for x in range(0,100):
+            if x < 10:
+                prefix = "0"
+            else:
+                prefix = ""
+            try:
+                pic = pygame.image.load(os.path.join("data","background"+prefix+str(x)+".jpg"))
+                pic = pygame.transform.scale(pic, (self.width, self.height))
+                self.backgrounds.append(pic.convert())
+            except:
+                print("harmless background loading pygame error:", pygame.get_error())
+                #print("please make sure there is a subfolder 'data' with backgroundfiles in it")
+        self.background = random.choice(self.backgrounds)    
+        
         try:  # ----------- load sprite images -----------
             tile = pygame.image.load(os.path.join("data", "startile-300px.png"))
             # tile = pygame.transform.scale(tile, (100,100)) # scale tile to (pixel): x=100, y=100
@@ -618,7 +634,7 @@ class PygView(object):
             pygame.quit()
             sys.exit()
         # fill background with tiles
-        self.background = fill_surface_with_tiles(tile, self.width, self.height)
+        #self.background = fill_surface_with_tiles(tile, self.width, self.height)
         # write text
         # -------  write text over everything  -----------------
         write(self.background, "Press b to add another ball", x=self.width // 2, y=250, center=True)
