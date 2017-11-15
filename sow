@@ -417,7 +417,7 @@ class Explosion(FlyingObject):
         self.animcycle = 1/16
         self.pic = 0
         for f in range(random.randint(50, 100)):
-            Shard(x=self.x -20, y=self.y -20)
+            Shard(x=self.x, y=self.y)
         
     def create_image(self):
         self.image = Explosion.pics[0]
@@ -454,7 +454,7 @@ class ExplosionA(FlyingObject):
         self.pic = 0
         self.create_image()
         for f in range(random.randint(50, 100)):
-            ShardA(x=self.x +20, y=self.y +20)
+            ShardA(x=self.x, y=self.y)
     
     def create_image(self):
         self.image = ExplosionA.pics[0]
@@ -489,7 +489,7 @@ class Shard(FlyingObject):
     
     def create_image(self):
         self.image = pygame.Surface((2,2))
-        pygame.draw.circle(self.image, (random.randint(50,155), random.randint(50,155), random.randint(100,255)), (1, 1), 1)
+        pygame.draw.circle(self.image, (random.randint(100,255), random.randint(50,155),50), (1, 1), 1)
         self.image0 = self.image
         
         
@@ -503,12 +503,8 @@ class ShardA(Shard):
     
     def create_image(self):
         self.image = pygame.Surface((2,2))
-        pygame.draw.circle(self.image, (random.randint(100,255), random.randint(50,155), random.randint(50,155),), (1, 1), 1)
+        pygame.draw.circle(self.image, (0, random.randint(50,155), random.randint(100,255),), (1, 1), 1)
         self.image0 = self.image
-
-
-
-
 
 
 class Light(FlyingObject):
@@ -623,9 +619,8 @@ class Hunter(Ship):
         self.dy = random.random()*3-1.5
         #self.rotate(self.angle)
         self.laserrange = 150
-        self.hitpoints = 30
-        self.laserdamage_per_second = 11
-        
+        self.hitpoints = 20
+        self.laserdamage_per_second = 10
         self.laserdamagechance = 0.6
         self.animatetime = 1 / len(Hunter.pics)
     
@@ -658,7 +653,7 @@ class Bomber(Ship):
         self.dy = random.random()*3-1.5
         self.rotate(self.angle)
         self.torpedorange = 150
-        self.hitpoints = 25
+        self.hitpoints = 30
         self.animatetime = 1 / len(Bomber.pics)
     
     def animate(self):
@@ -718,7 +713,7 @@ class PygView(object):
         self.screen = pygame.display.set_mode((self.width, self.height), pygame.DOUBLEBUF)
         self.background = pygame.Surface(self.screen.get_size()).convert()  
         self.background.fill((255,255,255)) # fill background white
-        tmp = pygame.image.load(os.path.join("data","background03.jpg"))
+        tmp = pygame.image.load(os.path.join("data","background05.jpg"))
         self.background = pygame.transform.scale(tmp, (self.width, self.height)).convert()
         #for x in range(0, 1301, 50):
         #    pygame.draw.line(self.background, (128, 0, 128), (x, 0), (x, 701), 3 if x%100 == 0 else 1)
@@ -729,20 +724,19 @@ class PygView(object):
         tmp = pygame.image.load(os.path.join("data","Torpedo.png")).convert_alpha()
         KinetikShoot.kinetikshootpic = pygame.transform.scale(tmp, (10, 10))
         
-        for filename in ["1b", "1bb", "1bbb", "1bbbb", "2b", "2bb", "2bbb", "2bbbb", "3b", "3bb", "3bbb", "3bbbb", "4b", "4bb", "4bbb", "4bbbb",]:
+        for filename in ["1111", "2222", "3333", "4444", "111", "222", "333", "444", "11", "22", "33", "44", "1", "2", "3", "4"]:
             Explosion.pics.append(pygame.image.load(os.path.join("data", "explosion_"+filename+".png")))
-        random.shuffle(Explosion.pics)
         
-        for filename in ["1a", "1aa", "1aaa", "1aaaa", "2a", "2aa", "2aaa", "2aaaa", "3a", "3aa", "3aaa", "3aaaa", "4a", "4aa", "4aaa", "4aaaa"]:
+        for filename in ["1aaaa", "2aaaa", "3aaaa", "4aaaa", "1aaa", "2aaa", "3aaa", "4aaa", "1aa", "2aa", "3aa", "4aa", "1a", "2a", "3a", "4a"]:
             ExplosionA.pics.append(pygame.image.load(os.path.join("data", "explosion_"+filename+".png")))
-        random.shuffle(ExplosionA.pics)
         
-        for filename in ["1","2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"]:
+        for filename in ["1","2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]:
             Hunter.pics.append(pygame.image.load(os.path.join("data", "links"+filename+".png")))
             
-        for filename in ["1","2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"]:
+        for filename in ["1","2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]:
             Bomber.pics.append(pygame.image.load(os.path.join("data", "rechts"+filename+".png")))
         
+
         #for dimension in ((10, 10), (20, 20), (30, 30), (40, 40)):
         #    for name in ("explosion_1.png", "explosion_2.png", "explosion_3.png", "explosion_4.png"):
         #        tmp = pygame.image.load(os.path.join("data", name)).convert_alpha()
@@ -826,13 +820,6 @@ class PygView(object):
                         for ship in self.allgroup:
                             ship.kill()
                                 
-                        
-            # random wave of ships
-            if random.random() < 0.005:
-                for z in range(random.randint(5, 15)):
-                    Bomber(x=random.randint(700, 1250), y=random.randint(50, 650))
-                    Hunter(x=random.randint(50, 600), y=random.randint(50, 650))
-                        
             # end of event handler
            
             milliseconds = self.clock.tick(self.fps) #
@@ -844,10 +831,11 @@ class PygView(object):
             write(self.screen, "FPS: {:6.3}  PLAYTIME: {:6.3} SECONDS".format(
                            self.clock.get_fps(), self.playtime))
             
-            
-            #---------Shard collision---------
-            
-            
+            write(self.screen, "n - Nuke", x=PygView.width-200, y=10)
+            write(self.screen, "h - 1xHunter", x=PygView.width-200, y=30)
+            write(self.screen, "g - 10xHunter", x=PygView.width-200, y=50)
+            write(self.screen, "b - 1xBomber", x=PygView.width-200, y=70)
+            write(self.screen, "v - 10xBomber", x=PygView.width-200, y=90)
             #----------Hunter fire laser at Bomber------------------
             for h in self.huntergroup:
                 targets = []
@@ -861,18 +849,14 @@ class PygView(object):
                             number = t.number
                             target = t
                     #target = random.choice(targets)
-                    pygame.draw.line(self.screen, (random.randint(100, 255), random.randint(0, 100), random.randint(50, 150)), (h.x, h.y), (target.x, target.y), 2)
+                    pygame.draw.line(self.screen, (random.randint(0, 100), random.randint(100, 255), random.randint(100, 255)), (h.x, h.y), (target.x, target.y), 2)
                     if random.random() < 0.05:
                         Light(x=t.x, y=t.y)
                     if random.random() < h.laserdamagechance:
                         t.hitpoints -= h.laserdamage_per_second * seconds
                         #print(t, t.hitpoints)
                         if t.hitpoints < 1:
-                            Explosion(x=t.x +40, y=t.y +40)
-                            for a in range(90):
-                                 s = Shard(x = t.x +20, y = t.y +20)
-                                 s.dx = math.cos(a) * 50
-                                 s.dy = math.sin(a) * 50
+                            Explosion(x=t.x, y=t.y)
                             t.kill()
              
             for b in self.bombergroup:
@@ -888,7 +872,7 @@ class PygView(object):
                             target = t 
                     if b.cooldown == 0:
                         KinetikShoot(b.x, b.y, dx = t.x-b.x, dy = t.y-b.y)
-                        b.cooldown = 2
+                        b.cooldown = 1.4
                     
             for k in self.kinetikshootgroup:
                crashgroup = pygame.sprite.spritecollide(k, self.huntergroup, False, pygame.sprite.collide_circle)
@@ -900,10 +884,6 @@ class PygView(object):
                    k.kill()
                    if h.hitpoints < 1:
                        ExplosionA(x=h.x, y=h.y)
-                       for a in range(90):
-                           s = ShardA(x = h.x +20, y = h.y +20)
-                           s.dx = math.cos(a) * 100
-                           s.dy = math.sin(a) * 100
                        h.kill()
             
             
