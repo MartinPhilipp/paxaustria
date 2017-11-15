@@ -6,6 +6,7 @@ menu system for pygame
 
 import pygame 
 #import simpledefense
+import graphic_demo3
 import textscroller_vertical
 import random
 import sys
@@ -14,9 +15,10 @@ import os.path
 
 class Settings(object):
     menu = {"root":["Play","Difficulty", "Help", "Credits", "Options","Quit"],
-            "Options":["Turn music off","Turn sound off","Change screen resolution", "Turn off Wilhelm"],
+            "Options":["Turn music off","Turn sound off","Change screen resolution", "Change grid size"],
             "Difficulty":["easy","medium","elite","hardcore"],
-            "Change screen resolution":["640x400","800x640","1024x800"],
+            "Change screen resolution":["640x400","800x240","1024x800"],
+            "Change grid size":["10px","25px","50px", "100px"],
             "Credits":["bla1","bla2", "False"],
             "Help":["how to play", "how to win"]
             } 
@@ -82,7 +84,7 @@ class Menu(object):
 class PygView(object):
 
   
-    def __init__(self, width=640, height=400, fps=30):
+    def __init__(self, width=640, height=400, fps=30, gridsize=50):
         """Initialize pygame, window, background, font,...
            default arguments 
         """
@@ -98,6 +100,7 @@ class PygView(object):
         pygame.display.set_caption("Press ESC to quit")
         self.width = width
         self.height = height
+        self.gridsize = gridsize
         self.set_resolution()
         self.clock = pygame.time.Clock()
         self.fps = fps
@@ -147,7 +150,12 @@ class PygView(object):
                         print(result)
                         if result is None:
                             break 
-                        if "x" in result:
+                       
+                        if "px" in result:
+                            left = result.split("px")[0]
+                            self.gridsize = int(left)
+                        
+                        elif "x" in result:
                             # change screen resolution, menu text is something like "800x600"
                             left = result.split("x")[0]
                             right = result.split("x")[1]
@@ -160,7 +168,9 @@ class PygView(object):
                         # important: no elif here, instead if, because every menupoint could contain an 'x'        
                         if result=="Play":
                             # simpledefense.PygView().run()
-                            print("activating external program")
+                            graphic_demo3.PygView(self.width, self.height, self.gridsize).run()
+                            #print("activating external program")
+                            PygView().run()
                         elif result == "how to play":
                             text="play this game\n as you like\n and win!"
                             textscroller_vertical.PygView(text, self.width, self.height).run()
