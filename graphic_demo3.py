@@ -610,12 +610,24 @@ class PygView(object):
         self.font = pygame.font.SysFont('mono', 24, bold=True)
 
 
-    def grid(self):
+    def grid(self, color1=(128,0,128), color2=(200,0,200), bold=5):
+        
         for x in range(0, self.width, PygView.gridsize):
-            pygame.draw.line(self.background, (128, 0, 128), (x, 0), (x, 701), 3 if x%100 == 0 else 1)
+            pygame.draw.line(self.background, color1, (x, 0), (x, 701),  1)
         for y in range(0, self.height, PygView.gridsize):
-            pygame.draw.line(self.background, (128, 0, 128), (0, y), (1301, y), 3 if y%100 == 0 else 1)
-        self.background.convert()#convert_alpha()
+            pygame.draw.line(self.background, color1, (0, y), (1301, y), 1)
+        counter = 0
+        for x in range(0, self.width, PygView.gridsize):
+            counter += 1
+            if counter % bold == 0:
+                pygame.draw.line(self.background, color2, (x, 0), (x, 701),  3)
+        counter = 0
+        for y in range(0, self.height, PygView.gridsize):
+            counter += 1
+            if counter % bold == 0:
+                pygame.draw.line(self.background, color2, (0, y), (1301, y), 3)
+            
+            
  
     def paint(self):
         """painting ships on the surface"""
