@@ -66,7 +66,7 @@ class VectorSprite(pygame.sprite.Sprite):
             self.navI = 0
             self.init2()
             
-    def init2(self, pos, mov):
+    def init2(self, position, mov):
         pass
                     
                     
@@ -90,8 +90,8 @@ class VectorSprite(pygame.sprite.Sprite):
                 maxy = point.y
         self.image = pygame.Surface((maxx, maxy))
         old = (0, 0)
-        for pos in pointlist:
-            pygame.draw.line(self.image, (random.randint(0,255), random.randint(0,255), random.randint(0,255)), old, pos)
+        for position in pointlist:
+            pygame.draw.line(self.image, (random.randint(0,255), random.randint(0,255), random.randint(0,255)), old, position)
         #pygame.draw.circle(self.image, (255,0,0), (2,2), 2)
         self.image.convert_alpha()  
         self.image0 = self.image.copy()
@@ -207,8 +207,8 @@ class VectorSprite(pygame.sprite.Sprite):
 
 class Fragment(VectorSprite):
     
-    def init2(self, pos=v.Vec2d(300,300), mov=None):
-        self.position = pos
+    def init2(self, position=v.Vec2d(300,300), mov=None):
+        self.position = position
         if mov is None:
             self.movement = v.Vec2d(random.randint(-50,50), 
                                   random.randint(-50,50))
@@ -224,6 +224,35 @@ class Fragment(VectorSprite):
         self.image.set_colorkey((0,0,0))
         self.image.convert_alpha()  
         self.image0 = self.image.copy()
+        
+        
+class Ufo(VectorSprite):
+  
+    def update(self, seconds):
+        # --- chance to change movement vector ---
+        if random.random() < 0.001:
+            self.movement=v.Vec2d(random.randint(-80,80),
+                              random.randint(-80,80))
+        # --- bounce on screen edge ---
+        if self.position.x < 0:
+            self.position.x = 0
+            self.movement.x *= -1
+        elif self.position.x > PygView.width:
+            self.position.x = PygView.width
+            self.movement.x *= -1
+        if self.position.y < 0:
+            self.position.y = 0
+            self.movement.y *= -1
+        elif self.position.y > PygView.height:
+            self.position.y = PygView.height
+            self.movement.y *= -1
+        VectorSprite.update(self, seconds)
+  
+    def create_image(self):
+        self.image = pygame.Surface((100, 90))
+        pygame.draw.polygon(self.image, (255, 0, 0), [(0, 45), (20, 0), (100, 45), (20, 90)],1)
+        self.image.set_colorkey((0,0,0))
+        self.image.convert_alpha() 
         
 
         
@@ -434,6 +463,7 @@ class PygView(object):
         self.dreadnaught.position = self.dreadnaught.path[0]
         self.dreadnaught.flyToNextNavPoint() 
         
+        self.ufo1 = Ufo(v.Vec2d(PygView.width, 50), v.Vec2d(-50,0))
         
         
         
